@@ -1,17 +1,25 @@
 #pragma once
+#include <iostream>
+
+using namespace std;
 
 class SLList
 {
 private:
-	SLList* beginList(int data);
-	SLList* m_nextElem;
 	int m_data;
+	bool m_isFirst;
+	SLList* m_nextElem;
 public:
-	SLList(int data);
 	int getData();
-	void setData(int data);
+	bool isFirst();
 	SLList* next();
 	bool hasNext();
-	SLList* addElement(int data);
 	void removeNext();
+	void setData(int data);
+	SLList* addElement(int data);
+	static SLList* beginList(int data);
 };
+
+void printSLList(SLList* list);
+int getElementFromEnd(SLList* list, int k);
+void removeDuplicates(SLList* list);
