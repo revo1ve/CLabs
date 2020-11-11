@@ -139,7 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SLList.cpp" />
     <ClCompile Include="SLListTask.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SLList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
