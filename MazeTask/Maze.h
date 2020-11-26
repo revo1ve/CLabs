@@ -32,5 +32,3 @@ public:
 	bool makeConnection(int i1, int j1, int i2, int j2);
 	bool removeConnection(int i1, int j1, int i2, int j2);
 };
-
-Maze* createLadderMaze(int n, int j);
