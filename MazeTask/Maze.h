@@ -1,20 +1,9 @@
 #pragma once
+#include "MCell.h"
 #include <xmemory>
 #include <iostream>
 
 using namespace std;
-
-class MCell
-{
-	friend class Maze;
-private:
-	bool m_down;
-	bool m_right;
-	MCell();
-public:
-	bool right();
-	bool down();
-};
 
 class Maze
 {

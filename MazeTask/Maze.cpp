@@ -1,13 +1,5 @@
 ﻿#include "Maze.h"
 
-MCell::MCell()
-{
-	m_down = false;
-	m_right = false;
-}
-
-Maze::Maze(int n, int m) : m_n(n), m_m(m) { m_field = new MCell[n * m]; }
-
 bool Maze::hasConnection(int i1, int j1, int i2, int j2)
 {
 	if (!cellInMaze(i1, j1) || !cellInMaze(i2, j2)) return false;
@@ -104,10 +96,8 @@ void Maze::printMaze()
 
 Maze::~Maze() { free(m_field); }
 
-bool MCell::down() { return m_down; }
-
-bool MCell::right() { return m_right; }
-
 const MCell& Maze::cell(int i, int j) const { return *m_field; }
+
+Maze::Maze(int n, int m) : m_n(n), m_m(m) { m_field = new MCell[n * m]; }
 
 bool Maze::cellInMaze(int i, int j) { return i >= 0 && i < m_n&& j >= 0 && j < m_m; }

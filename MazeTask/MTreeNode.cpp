@@ -9,17 +9,6 @@ MTreeNode::MTreeNode(MTreeNode* parent)
 	m_children = vector<MTreeNode*>();
 };
 
-int MTreeNode::i() const { return this->m_i; }
-
-int MTreeNode::j() const { return this->m_j; }
-
-int MTreeNode::distance() const { return this->m_distance; }
-
-int MTreeNode::childCount() const
-{
-	return m_children.size();
-}
-
 bool MTreeNode::addChild(int i, int j) 
 { 
 	auto child = new MTreeNode(this);
@@ -29,8 +18,6 @@ bool MTreeNode::addChild(int i, int j)
 	return true;
 }
 
-const MTreeNode* MTreeNode::parent() const { return m_parent; }
-
 MTreeNode* MTreeNode::hasChild(int i, int j)
 {
 	for (auto node : this->m_children)
@@ -38,11 +25,6 @@ MTreeNode* MTreeNode::hasChild(int i, int j)
 			return node;
 
 	return nullptr;
-}
-
-MTreeNode* MTreeNode::beginTree(int i, int j)
-{
-	return new MTreeNode(nullptr);
 }
 
 const MTreeNode* MTreeNode::child(int i)
@@ -55,3 +37,15 @@ const MTreeNode* MTreeNode::child(int i)
 
 	return nullptr;
 }
+
+int MTreeNode::i() const { return this->m_i; }
+
+int MTreeNode::j() const { return this->m_j; }
+
+int MTreeNode::distance() const { return this->m_distance; }
+
+const MTreeNode* MTreeNode::parent() const { return m_parent; }
+
+int MTreeNode::childCount() const { return m_children.size(); }
+
+MTreeNode* MTreeNode::beginTree(int i, int j) { return new MTreeNode(nullptr); }
