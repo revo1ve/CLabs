@@ -38,14 +38,30 @@ const MTreeNode* MTreeNode::child(int i)
 	return nullptr;
 }
 
-int MTreeNode::i() const { return this->m_i; }
+MTreeNode* MTreeNode::beginTree(int i, int j)
+{
+	auto tree = new MTreeNode(nullptr);
+	tree->m_i = i;
+	tree->m_j = j;
+	return tree;
+}
 
-int MTreeNode::j() const { return this->m_j; }
+MTreeNode* MTreeNode::searchNode(const MTreeNode& tree, const int i, const int j)
+{
+	if (tree.m_i == i && tree.m_j == j) return &(MTreeNode)tree;
 
-int MTreeNode::distance() const { return this->m_distance; }
+	if (tree.childCount() > 0)
+	{
+		for (auto node : tree.m_children)
+			if (node->m_i == i && node->m_j == j)
+				return node;
 
-const MTreeNode* MTreeNode::parent() const { return m_parent; }
+		for (auto node : tree.m_children)
+		{
+			auto foundNode = searchNode(*node, i, j);
+			if (foundNode != nullptr) return foundNode;
+		}
+	}
 
-int MTreeNode::childCount() const { return m_children.size(); }
-
-MTreeNode* MTreeNode::beginTree(int i, int j) { return new MTreeNode(nullptr); }
+	return nullptr;
+}

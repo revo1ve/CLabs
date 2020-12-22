@@ -4,39 +4,39 @@ bool Maze::hasConnection(int i1, int j1, int i2, int j2)
 {
 	if (!cellInMaze(i1, j1) || !cellInMaze(i2, j2)) return false;
 
-	if (j1 < j2) return m_field[i1 * m_n + j1].m_right;
+	if (j1 < j2) return m_field[i1 * m_m + j1].m_right;
 
-	else if (j1 > j2) return m_field[i2 * m_n + j2].m_right;
+	else if (j1 > j2) return m_field[i2 * m_m + j2].m_right;
 
-	else if (i1 < i2) return m_field[i1 * m_n + j1].m_down;
+	else if (i1 < i2) return m_field[i1 * m_m + j1].m_down;
 
-	else return m_field[i2 * m_n + j2].m_down;
+	else return m_field[i2 * m_m + j2].m_down;
 }
 
 bool Maze::makeConnection(int i1, int j1, int i2, int j2)
 {
 	if (!cellInMaze(i1, j1) || !cellInMaze(i2, j2)) return false;
 
-	if (j1 < j2) m_field[i1 * m_n + j1].m_right = true;
+	if (j1 < j2) m_field[i1 * m_m + j1].m_right = true;
 
-	else if (j1 > j2) m_field[i2 * m_n + j2].m_right = true;
+	else if (j1 > j2) m_field[i2 * m_m + j2].m_right = true;
 
-	else if (i1 < i2) m_field[i1 * m_n + j1].m_down = true;
+	else if (i1 < i2) m_field[i1 * m_m + j1].m_down = true;
 
-	else m_field[i2 * m_n + j2].m_down = true;
+	else m_field[i2 * m_m + j2].m_down = true;
 }
 
 bool Maze::removeConnection(int i1, int j1, int i2, int j2)
 {
 	if (!cellInMaze(i1, j1) || !cellInMaze(i2, j2)) return false;
 
-	if (j1 < j2) m_field[i1 * m_n + j1].m_right = false;
+	if (j1 < j2) m_field[i1 * m_m + j1].m_right = false;
 
-	else if (j1 > j2) m_field[i2 * m_n + j2].m_right = false;
+	else if (j1 > j2) m_field[i2 * m_m + j2].m_right = false;
 
-	else if (i1 < i2) m_field[i1 * m_n + j1].m_down = false;
+	else if (i1 < i2) m_field[i1 * m_m + j1].m_down = false;
 
-	else m_field[i2 * m_n + j2].m_down = false;
+	else m_field[i2 * m_m + j2].m_down = false;
 }
 
 void Maze::printMaze()
@@ -93,11 +93,3 @@ void Maze::printMaze()
 		cout << "\n";
 	}
 }
-
-Maze::~Maze() { free(m_field); }
-
-const MCell& Maze::cell(int i, int j) const { return *m_field; }
-
-Maze::Maze(int n, int m) : m_n(n), m_m(m) { m_field = new MCell[n * m]; }
-
-bool Maze::cellInMaze(int i, int j) { return i >= 0 && i < m_n&& j >= 0 && j < m_m; }
