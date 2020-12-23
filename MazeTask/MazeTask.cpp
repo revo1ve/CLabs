@@ -1,14 +1,66 @@
 ﻿#include "Maze.h"
 #include "MTreeNode.h"
-#include "Direction.h"
 
-void buildFullMaze(Maze& iMaze, MTreeNode& tree);
+void buildFullMaze(Maze& iMaze, MTreeNode& tree)
+{
+	MTreeNode* currentNode = &tree;
 
-int* generateEntryPoint(int n, int m);
+	while (currentNode != nullptr)
+	{
+		int i = currentNode->i();
+		int j = currentNode->j();
+		auto possibleDirections = new vector<int>();
 
-vector<Direction>* getPossibleDirections(Maze& maze, int i, int j);
+		if (!(!iMaze.cellInMaze(i - 1, j)
+			|| iMaze.hasConnection(i - 1, j, i - 2, j) || iMaze.hasConnection(i - 1, j, i, j)
+			|| iMaze.hasConnection(i - 1, j, i - 1, j - 1) || iMaze.hasConnection(i - 1, j, i - 1, j + 1)))
+			possibleDirections->push_back(0);
+		if (!(!iMaze.cellInMaze(i, j + 1)
+			|| iMaze.hasConnection(i, j + 1, i - 1, j + 1) || iMaze.hasConnection(i, j + 1, i + 1, j + 1)
+			|| iMaze.hasConnection(i, j + 1, i, j) || iMaze.hasConnection(i, j + 1, i, j + 2)))
+			possibleDirections->push_back(1);
+		if (!(!iMaze.cellInMaze(i + 1, j)
+			|| iMaze.hasConnection(i + 1, j, i, j) || iMaze.hasConnection(i + 1, j, i + 2, j)
+			|| iMaze.hasConnection(i + 1, j, i + 1, j - 1) || iMaze.hasConnection(i + 1, j, i + 1, j + 1)))
+			possibleDirections->push_back(2);
+		if (!(!iMaze.cellInMaze(i, j - 1)
+			|| iMaze.hasConnection(i, j - 1, i - 1, j - 1) || iMaze.hasConnection(i, j - 1, i + 1, j - 1)
+			|| iMaze.hasConnection(i, j - 1, i, j - 2) || iMaze.hasConnection(i, j - 1, i, j)))
+			possibleDirections->push_back(3);
 
-bool cellVisited(Maze& maze, int i, int j);
+		if (!possibleDirections->empty())
+		{
+			int randomDirection = possibleDirections->at(rand() % possibleDirections->size());
+
+			switch (randomDirection)
+			{
+			case 0:
+				currentNode->addChild(i - 1, j);
+				currentNode = currentNode->hasChild(i - 1, j);
+				iMaze.makeConnection(i, j, i - 1, j);
+				continue;
+			case 1:
+				currentNode->addChild(i, j + 1);
+				currentNode = currentNode->hasChild(i, j + 1);
+				iMaze.makeConnection(i, j, i, j + 1);
+				continue;
+			case 2:
+				currentNode->addChild(i + 1, j);
+				currentNode = currentNode->hasChild(i + 1, j);
+				iMaze.makeConnection(i, j, i + 1, j);
+				continue;
+			case 3:
+				currentNode->addChild(i, j - 1);
+				currentNode = currentNode->hasChild(i, j - 1);
+				iMaze.makeConnection(i, j, i, j - 1);
+				continue;
+			default:
+				break;
+			}
+		}
+		else currentNode = (MTreeNode*)currentNode->parent();
+	}
+}
 
 int main()
 {
@@ -18,8 +70,32 @@ int main()
 	cin >> n >> m;
 
 	Maze* randomMaze = new Maze(n, m);
-	auto entryPoint = generateEntryPoint(n, m);
-	MTreeNode* tree = MTreeNode::beginTree(*entryPoint, *(entryPoint + 1));
+	int* entryPoint = new int[] { 0, 0 };
+
+	srand((unsigned)time(0));
+	int sides[4] = { 0, 1, 2, 3 };
+	int randomSide = sides[rand() % 4];
+
+	switch (randomSide)
+	{
+	case 0:
+		entryPoint = new int[] { 0, rand() % m };
+		break;
+	case 1:
+		entryPoint = new int[] { rand() % n, m - 1 };
+		break;
+	case 2:
+		entryPoint = new int[] { n - 1, rand() % m };
+		break;
+	case 3:
+		entryPoint = new int[] { rand() % n, 0 };
+		break;
+	default:
+		entryPoint = new int[] { 0, 0 };
+		break;
+	}
+
+	MTreeNode* tree = MTreeNode::beginTree(entryPoint[0], entryPoint[1]);
 	buildFullMaze(*randomMaze, *tree);
 	randomMaze->printMaze();
 
@@ -52,91 +128,4 @@ int main()
 	}
 
 	cout << "Max weight: " << maxWeight << "\n" << "Weight average: " << (float)weightSum / (n * m);
-}
-
-void buildFullMaze(Maze& iMaze, MTreeNode& tree)
-{
-	MTreeNode* currentNode = &tree;
-	
-	while (currentNode != nullptr)
-	{
-		int i = currentNode->i();
-		int j = currentNode->j();
-		auto possibleDirections = getPossibleDirections(iMaze, i, j);
-
-		if (!possibleDirections->empty())
-		{
-			Direction randomDirection = possibleDirections->at(rand() % possibleDirections->size());
-
-			switch (randomDirection)
-			{
-			case Direction::Up:
-				currentNode->addChild(i - 1, j);
-				currentNode = currentNode->hasChild(i - 1, j);
-				iMaze.makeConnection(i, j, i - 1, j);
-				continue;
-			case Direction::Right:
-				currentNode->addChild(i, j + 1);
-				currentNode = currentNode->hasChild(i, j + 1);
-				iMaze.makeConnection(i, j, i, j + 1);
-				continue;
-			case Direction::Down:
-				currentNode->addChild(i + 1, j);
-				currentNode = currentNode->hasChild(i + 1, j);
-				iMaze.makeConnection(i, j, i + 1, j);
-				continue;
-			case Direction::Left:
-				currentNode->addChild(i, j - 1);
-				currentNode = currentNode->hasChild(i, j - 1);
-				iMaze.makeConnection(i, j, i, j - 1);
-				continue;
-			default:
-				break;
-			}
-		}
-		else currentNode = (MTreeNode*)currentNode->parent();
-	}
-}
-
-int* generateEntryPoint(int n, int m)
-{
-	srand((unsigned)time(0));
-	Direction sides[4] = { Direction::Up, Direction::Right, Direction::Down, Direction::Left };
-	Direction randomSide = sides[rand() % 4];
-
-	switch (randomSide)
-	{
-	case Direction::Up:
-		return new int[] { 0, rand() % m };
-	case Direction::Right:
-		return new int[] { rand() % n, m - 1 };
-	case Direction::Down:
-		return new int[] { n - 1, rand() % m };
-	case Direction::Left:
-		return new int[] { rand() % n, 0 };
-	default:
-		return new int[] { 0, 0 };
-	}
-}
-
-vector<Direction>* getPossibleDirections(Maze& maze, int i, int j)
-{
-	auto possibleDirections = new vector<Direction>();
-
-	if (!cellVisited(maze, i - 1, j))
-		possibleDirections->push_back(Direction::Up);
-	if (!cellVisited(maze, i + 1, j))
-		possibleDirections->push_back(Direction::Down);
-	if (!cellVisited(maze, i, j + 1))
-		possibleDirections->push_back(Direction::Right);
-	if (!cellVisited(maze, i, j - 1))
-		possibleDirections->push_back(Direction::Left);
-
-	return possibleDirections;
-}
-
-bool cellVisited(Maze& maze, int i, int j)
-{
-	return !(maze.cellInMaze(i, j)) || maze.hasConnection(i, j, i - 1, j) || maze.hasConnection(i, j, i + 1, j)
-		|| maze.hasConnection(i, j, i, j - 1) || maze.hasConnection(i, j, i, j + 1);
 }
