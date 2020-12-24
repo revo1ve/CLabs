@@ -70,7 +70,7 @@ int main()
 	cin >> n >> m;
 
 	Maze* randomMaze = new Maze(n, m);
-	int* entryPoint = new int[] { 0, 0 };
+	int* entryPoint = new int[2] { 0, 0 };
 
 	srand((unsigned)time(0));
 	int sides[4] = { 0, 1, 2, 3 };
@@ -79,19 +79,19 @@ int main()
 	switch (randomSide)
 	{
 	case 0:
-		entryPoint = new int[] { 0, rand() % m };
+		entryPoint = new int[2] { 0, rand() % m };
 		break;
 	case 1:
-		entryPoint = new int[] { rand() % n, m - 1 };
+		entryPoint = new int[2] { rand() % n, m - 1 };
 		break;
 	case 2:
-		entryPoint = new int[] { n - 1, rand() % m };
+		entryPoint = new int[2] { n - 1, rand() % m };
 		break;
 	case 3:
-		entryPoint = new int[] { rand() % n, 0 };
+		entryPoint = new int[2] { rand() % n, 0 };
 		break;
 	default:
-		entryPoint = new int[] { 0, 0 };
+		entryPoint = new int[2] { 0, 0 };
 		break;
 	}
 
